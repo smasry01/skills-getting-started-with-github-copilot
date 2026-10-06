@@ -25,6 +25,15 @@ A super simple FastAPI application that allows students to view and sign up for 
    - API documentation: http://localhost:8000/docs
    - Alternative documentation: http://localhost:8000/redoc
 
+## Tests
+
+Install the project dependencies, including pytest, and run the backend API tests:
+
+```
+pip install -r requirements.txt
+pytest tests/
+```
+
 ## API Endpoints
 
 | Method | Endpoint                                                          | Description                                                         |
