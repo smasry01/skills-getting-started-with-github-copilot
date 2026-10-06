@@ -43,7 +43,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
           details.participants.forEach((participant) => {
             const participantItem = document.createElement("li");
-            participantItem.textContent = participant;
+            participantItem.className = "participant-item";
+
+            const participantEmail = document.createElement("span");
+            participantEmail.textContent = participant;
+            participantItem.appendChild(participantEmail);
+
+            const unregisterButton = document.createElement("button");
+            unregisterButton.className = "unregister-button";
+            unregisterButton.type = "button";
+            unregisterButton.textContent = "\u00d7";
+            unregisterButton.setAttribute(
+              "aria-label",
+              `Unregister ${participant} from ${name}`
+            );
+            unregisterButton.title = "Unregister participant";
+            unregisterButton.addEventListener("click", async () => {
+              unregisterButton.disabled = true;
+
+              try {
+                const response = await fetch(
+                  `/activities/${encodeURIComponent(name)}/signup?email=${encodeURIComponent(participant)}`,
+                  { method: "DELETE" }
+                );
+                const result = await response.json();
+
+                if (!response.ok) {
+                  throw new Error(result.detail || "Unable to unregister participant");
+                }
+
+                await fetchActivities();
+              } catch (error) {
+                messageDiv.textContent = error.message || "Failed to unregister participant.";
+                messageDiv.className = "error";
+                messageDiv.classList.remove("hidden");
+                console.error("Error unregistering participant:", error);
+                unregisterButton.disabled = false;
+              }
+            });
+            participantItem.appendChild(unregisterButton);
             participantsList.appendChild(participantItem);
           });
 
